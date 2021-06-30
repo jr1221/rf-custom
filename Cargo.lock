@@ -152,7 +152,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rf_custom_rust"
+name = "rf_custom"
 version = "0.1.0"
 dependencies = [
  "clap",

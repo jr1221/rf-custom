@@ -27,6 +27,11 @@ This program can change the boot selection when the timeout reaches zero, and ot
 rEFInd bootloader, which must be installed to your EFI partition.
 ```
 
+## Building
+Just use `cargo build` after installing rust.
+
+### License
 This project is licensed under the EUPL 1.2.
 
+### Contributing
 Contrbutions welcome.

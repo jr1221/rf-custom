@@ -46,8 +46,8 @@ fn main() {
         .value_of("efi-path")
         .unwrap_or("/boot/efi/")
         .to_string();
-    if !efipath.ends_with("/") {
-        &efipath.push('/');
+    if !efipath.ends_with('/') {
+        efipath.push('/');
     }
 
     let mut refind_conf = OpenOptions::new()
@@ -56,15 +56,14 @@ fn main() {
         .open(format!("{}{}", efipath, "EFI/refind/refind.conf"))
         .unwrap();
 
-    if BufReader::new(&refind_conf)
+    if !BufReader::new(&refind_conf)
         .lines()
         .into_iter()
-        .find(|x| {
+        .any(|x| {
             x.as_ref()
                 .unwrap()
                 .eq("include refind-default-selections.conf")
         })
-        .is_none()
     {
         writeln!(refind_conf, "include refind-default-selections.conf")
             .expect("Error writing to refind.conf");
@@ -83,7 +82,7 @@ fn main() {
     if matches.is_present("number") {
         refind_defaults.set_len(0).expect("Error");
         refind_defaults
-            .write(
+            .write_all(
                 format!(
                     "{}{}",
                     "default_selection ",
@@ -92,12 +91,13 @@ fn main() {
                 .as_bytes(),
             )
             .expect("Error adding default selection (num)");
+        return;
     }
 
     if matches.is_present("substring") {
         refind_defaults.set_len(0).expect("Error");
         refind_defaults
-            .write(
+            .write_all(
                 format!(
                     "{}{}",
                     "default_selection ",
@@ -117,6 +117,5 @@ fn main() {
     }
     if matches.is_present("clear") {
         refind_defaults.set_len(0).expect("Error clearing file");
-        return;
     }
 }
